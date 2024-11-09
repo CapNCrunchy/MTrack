@@ -1,20 +1,28 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { DotsThree } from '@phosphor-icons/react';
 
 const MedicationContainer = ({ medication_ID }) => {
     // change bg color based on taken status
     const getBackgroundColor = () => {
-        if (takenToday && requiredToday) return 'bg-green-700';
-        if (!takenToday && requiredToday) return 'bg-red-700';
-        return 'bg-zinc-700';
+        if (takenToday) {
+            return 'bg-green-700';
+        } else if (skipToday) {
+            return 'bg-amber-700';
+        } else if (!takenToday) {
+            return 'bg-red-700';
+        }
     };
 
     // change content based on taken status
     const getTakenStatus = () => {
         if (takenToday) {
             return <p className='text-white'>Taken today</p>;
+        } else if (skipToday) {
+            return <p className='text-white'>Skipped today</p>;
         } else {
-            return <button className='text-white text-left underline' onClick={() => setTakenToday(true)}>Mark as taken</button>;
+            return <button className='text-white text-left underline hover:text-neutral-300 transition-all'
+                onClick={() => setTakenToday(true)}>Mark as taken</button>;
         }
     }
 
@@ -22,30 +30,35 @@ const MedicationContainer = ({ medication_ID }) => {
     const [showMenu, setShowMenu] = useState(false);
 
     const [takenToday, setTakenToday] = useState(false);
-    const [requiredToday, setRequiredToday] = useState(true);
+    const [skipToday, setSkipToday] = useState(false);
 
     return (
         <div className={`relative flex flex-col justify-between p-4 rounded-lg shadow-md w-fit text-left justify-self-center ${getBackgroundColor()}`}>
-            <div className='flex justify-between'>
-                <p className="text-sm font-light">2 pills (20 mg)</p>
-                <button onClick={() => setShowMenu(!showMenu)}>
-                    <svg className='w-4 fill-white' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0Zm1 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm7-4a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm3 1a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm4-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm3 1a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" clip-rule="evenodd" /></svg>
-                </button>
+            <div className='flex flex-row justify-between gap-2'>
+                <p className="text-sm font-light">09:00 AM</p>
+                <p className="text-sm font-light">2 pills</p>
             </div>
-            <p className="text-xl font-medium">
+
+            <p className="text-xl leading-tight font-medium">
                 Medication Title
             </p>
+
             <hr className="my-2 border-t border-gray-300 w-full" />
-            {getTakenStatus()}
-            <div className='absolute right-0 top-0'>
-                {showMenu && <div className='absolute left-full bg-zinc-700 bg-opacity-80 backdrop-blur-sm p-2 px-4 rounded-lg text-left text-sm z-10 text-nowrap flex flex-col items-start'>
-                    <button className='hover:text-gray-300 transition-all' onClick={() => setTakenToday(!takenToday)}>{takenToday ? 'Mark not taken' : 'Mark taken'}</button>
-                    <hr className="my-1 border-t border-gray-500 w-full" />
-                    <button className='hover:text-gray-300 transition-all' onClick={() => setRequiredToday(!requiredToday)}>{requiredToday ? 'Not required today' : 'Required today'}</button>
-                    <hr className="my-1 border-t border-gray-500 w-full" />
-                    <button className='text-red-500 hover:text-red-300 transition-all' onClick={() => setShowMenu(false)}>Close</button>
-                </div>}
+            <div className='flex flex-row justify-between'>
+                {getTakenStatus()}
+                <button className='hover:text-neutral-300 transition-all'
+                    onClick={() => setShowMenu(!showMenu)}>
+                    <DotsThree size={24} weight='bold' />
+                </button>
             </div>
+
+            {showMenu && <div className='absolute left-full bottom-0 bg-zinc-800 bg-opacity-80 backdrop-blur-sm p-2 px-4 rounded-lg text-left text-sm z-10 text-nowrap flex flex-col items-start'>
+                <button className='hover:text-gray-300 transition-all' onClick={() => setTakenToday(!takenToday)}>{takenToday ? 'Mark not taken' : 'Mark taken'}</button>
+                <hr className="my-1 border-t border-gray-500 w-full" />
+                <button className='hover:text-gray-300 transition-all' onClick={() => setSkipToday(!skipToday)}>{skipToday ? 'Unskip' : 'Skip'}</button>
+                <hr className="my-1 border-t border-gray-500 w-full" />
+                <button className='text-red-500 hover:text-red-300 transition-all' onClick={() => setShowMenu(false)}>Close</button>
+            </div>}
         </div>
     );
 };

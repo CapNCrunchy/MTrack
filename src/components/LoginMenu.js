@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 
-const LoginMenu = () => {
+function LoginMenu({ checkLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = (e) => {
         e.preventDefault();
-        // TODO: Add login logic here
-        console.log('Logging in with', username, password);
-        // Redirect to dashboard
-        window.location.href = '/dashboard';
+        checkLogin(e);
     };
 
     return (
