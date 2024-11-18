@@ -1,5 +1,5 @@
 # node
-/node_modules
+node_modules
 
 # django
 *.log
@@ -11,7 +11,7 @@ media
 .venv
 
 # production
-/build
+build
 
 # idea
 .idea

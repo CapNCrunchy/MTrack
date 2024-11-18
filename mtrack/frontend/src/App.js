@@ -1,9 +1,10 @@
+import Index from './pages/Index';
 import LoginMenu from './components/LoginMenu';
 import SignupMenu from './components/SignupMenu';
 import Dashboard from './pages/Dashboard';
 import Calendar from './pages/Calendar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { SignOut, SignIn, UserPlus } from '@phosphor-icons/react';
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
                 <p className="text-xl font-light">Your personal medication tracker</p>
               </div>
               {loggedIn ? (
-                <button onClick={ handleSignOut } className="flex items-center gap-2 bg-red-700 p-2 rounded">
+                <button onClick={handleSignOut} className="flex items-center gap-2 bg-red-700 p-2 rounded">
                   <SignOut size={24} />
                   <p className='hidden md:block'>Sign Out</p>
                 </button>
@@ -59,6 +60,7 @@ function App() {
             <hr className="border-t border-gray-700 w-full my-4" />
           </div>
           <Routes>
+            <Route path="/" element={<Index loggedIn={loggedIn} name={name} email={email} />} />
             <Route path="/login" element={<LoginMenu loggedIn={loggedIn} setLoggedIn={setLoggedIn} setEmail={setEmail} setName={setName} />} />
             <Route path="/signup" element={<SignupMenu loggedIn={loggedIn} setLoggedIn={setLoggedIn} setEmail={setEmail} setName={setName} />} />
             <Route path="/dashboard" element={<Dashboard loggedIn={loggedIn} email={email} name={name} />} />

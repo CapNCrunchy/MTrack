@@ -13,7 +13,7 @@ import uuid
 from django.utils import timezone
 
 # Create your views here.
-SALT = uuid.uuid4().hex
+SALT = settings.SECRET_KEY
 class RegistrationView(APIView):
     def post(self, request):
         request.data["password"] = make_password(
