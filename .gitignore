@@ -12,6 +12,7 @@ media
 
 # production
 build
+build.zip
 
 # idea
 .idea

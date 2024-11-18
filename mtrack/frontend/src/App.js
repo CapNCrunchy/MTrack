@@ -13,6 +13,9 @@ function App() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
+  const URL = "http://localhost:8000";
+  // const URL = "https://mtracker.pythonanywhere.com";
+
   useEffect(() => {
     const email = localStorage.getItem('email');
     if (email) {
@@ -61,8 +64,8 @@ function App() {
           </div>
           <Routes>
             <Route path="/" element={<Index loggedIn={loggedIn} name={name} email={email} />} />
-            <Route path="/login" element={<LoginMenu loggedIn={loggedIn} setLoggedIn={setLoggedIn} setEmail={setEmail} setName={setName} />} />
-            <Route path="/signup" element={<SignupMenu loggedIn={loggedIn} setLoggedIn={setLoggedIn} setEmail={setEmail} setName={setName} />} />
+            <Route path="/login" element={<LoginMenu loggedIn={loggedIn} setLoggedIn={setLoggedIn} setEmail={setEmail} setName={setName} URL={URL} />} />
+            <Route path="/signup" element={<SignupMenu loggedIn={loggedIn} setLoggedIn={setLoggedIn} setEmail={setEmail} setName={setName} URL={URL} />} />
             <Route path="/dashboard" element={<Dashboard loggedIn={loggedIn} email={email} name={name} />} />
             <Route path="/calendar" element={<Calendar />} />
           </Routes>

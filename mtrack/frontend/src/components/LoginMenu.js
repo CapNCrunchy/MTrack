@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function LoginMenu({ loggedIn, setLoggedIn, setName, setEmail }) {
+function LoginMenu({ loggedIn, setLoggedIn, setName, setEmail, URL }) {
     const [givenEmail, setGivenEmail] = useState('');
     const [givenPassword, setGivenPassword] = useState('');
 
@@ -14,7 +14,7 @@ function LoginMenu({ loggedIn, setLoggedIn, setName, setEmail }) {
             email: givenEmail,
             password: givenPassword
         };
-        const response = await axios.post("http://localhost:8000/api/login", formData);
+        const response = await axios.post( URL + "/api/login", formData);
         if (response.data.success) {
             setLoggedIn(true);
             setName(response.data.name);

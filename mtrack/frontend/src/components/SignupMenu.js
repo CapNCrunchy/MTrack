@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function SignupMenu({loggedIn, setLoggedIn, setName, setEmail}) {
+function SignupMenu({loggedIn, setLoggedIn, setName, setEmail, URL}) {
     const [givenEmail, setGivenEmail] = useState('');
     const [givenName, setGivenName] = useState('');
     const [givenPassword, setGivenPassword] = useState('');
@@ -17,7 +17,7 @@ function SignupMenu({loggedIn, setLoggedIn, setName, setEmail}) {
             password: givenPassword
         };
         try {
-            const response = await axios.post("http://localhost:8000/api/register", formData);
+            const response = await axios.post(URL + "/api/signup", formData);
             if (response.data.success) {
                 setLoggedIn(true);
                 setName(givenName);
