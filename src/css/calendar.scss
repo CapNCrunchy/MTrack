@@ -1,0 +1,9 @@
+// edit default styles of react-big-calendar
+
+$out-of-range-bg-color: rgb(24, 24, 20);
+$out-of-range-color: rgb(112, 112, 112);
+$today-highlight-bg: rgb(54, 54, 60);
+$btn-color: white;
+$btn-bg: rgb(81, 81, 90);
+
+@import 'react-big-calendar/lib/sass/styles';
