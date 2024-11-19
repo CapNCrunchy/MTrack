@@ -1,40 +1,37 @@
 import React, { useState } from 'react';
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function SignupMenu({loggedIn, setLoggedIn, setName, setEmail, URL}) {
+function SignupMenu({ setLoggedIn, api }) {
     const [givenEmail, setGivenEmail] = useState('');
     const [givenName, setGivenName] = useState('');
     const [givenPassword, setGivenPassword] = useState('');
 
     const navigate = useNavigate();
 
-    const handleSignup = async (e) => {
+    const handleSignup = (e) => {
         e.preventDefault();
-        const formData = {
-            name: givenName,
-            email: givenEmail,
-            password: givenPassword
-        };
-        try {
-            const response = await axios.post(URL + "/api/signup", formData);
-            if (response.data.success) {
-                setLoggedIn(true);
-                setName(givenName);
-                setEmail(givenEmail);
-                localStorage.setItem('email', givenEmail);
-                navigate('/dashboard');
-            } else {
-                alert(response.data.message);
+        api.post(
+            "/api/signup",
+            {
+                email: givenEmail,
+                name: givenName,
+                password: givenPassword
             }
-        } catch (error) {
-            console.error(error);
-        }
-
+        ).then(function (res) {
+            api.post("/api/login", {
+                email: givenEmail,
+                password: givenPassword
+            }).then(function (res) {
+                setLoggedIn(true);
+                navigate('/dashboard');
+            })
+        }).catch(function (err) {
+            alert("Error: " + err.response.data['error']);
+        });
     };
 
     return (
-        <div className="bg-zinc-800 p-4 rounded-lg shadow-md w-fit text-left justify-self-center">
+        <div className="bg-zinc-800 p-4 rounded-lg shadow-md w-fit text-left">
             <form onSubmit={handleSignup} className='flex flex-col gap-4'>
                 <div>
                     <label className='text-xs uppercase text-neutral-200' htmlFor="name">Name:</label>

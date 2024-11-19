@@ -2,20 +2,18 @@
 
 from django.db import models
 
-# Create your models here.
-class Token(models.Model):
-    id = models.AutoField(primary_key=True)
-    token = models.CharField(max_length=255)
-    created_at = models.DateTimeField()
-    expires_at = models.DateTimeField()
-    user_id = models.IntegerField()
-    is_used = models.BooleanField(default=False)
-
-class User(models.Model):
+class Medication(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=255)
+    form = models.CharField(max_length=255)
+    strength = models.CharField(max_length=255)
 
-    def __str__(self) -> str:
-        return self.name
+class UserMedication(models.Model):
+    id = models.AutoField(primary_key=True)
+    user_id = models.IntegerField()
+    medication_id = models.IntegerField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    dosage = models.CharField(max_length=255)
+    notes = models.TextField()
+    

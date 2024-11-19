@@ -1,10 +1,19 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import { React, useEffect } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import RecordContainer from '../components/RecordContainer';
 import MedicationContainer from '../components/MedicationContainer';
 import { Pill, Files, CalendarDots } from '@phosphor-icons/react';
 
-function Dashboard({ loggedIn, name, email }) {
+function Dashboard({ loggedIn, api }) {
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!loggedIn) {
+            navigate('/login');
+        };
+    });
+
     return (
         <div className='flex flex-col gap-4'>
             <div className='flex flex-col md:flex-row justify-between gap-4'>

@@ -1,29 +1,26 @@
 import React, { useState } from 'react';
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function LoginMenu({ loggedIn, setLoggedIn, setName, setEmail, URL }) {
+function LoginMenu({ setLoggedIn, api }) {
     const [givenEmail, setGivenEmail] = useState('');
     const [givenPassword, setGivenPassword] = useState('');
 
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleLogin = (e) => {
         e.preventDefault();
         const formData = {
             email: givenEmail,
             password: givenPassword
         };
-        const response = await axios.post( URL + "/api/login", formData);
-        if (response.data.success) {
-            setLoggedIn(true);
-            setName(response.data.name);
-            setEmail(response.data.email);
-            localStorage.setItem('email', response.data.email);
-            navigate('/dashboard');
-        } else {
-            alert(response.data.message);
-        }
+        api.post("/api/login", formData)
+            .then(response => {
+                setLoggedIn(true);
+                navigate('/dashboard');
+            })
+            .catch(err => {
+                alert("Error: " + err.response.data['error']);
+            });
     };
 
     return (
