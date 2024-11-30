@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function LoginMenu({ setLoggedIn, api }) {
-    const [givenEmail, setGivenEmail] = useState('');
-    const [givenPassword, setGivenPassword] = useState('');
+    const [givenEmail, setGivenEmail] = useState("");
+    const [givenPassword, setGivenPassword] = useState("");
 
     const navigate = useNavigate();
 
@@ -11,23 +11,37 @@ function LoginMenu({ setLoggedIn, api }) {
         e.preventDefault();
         const formData = {
             email: givenEmail,
-            password: givenPassword
+            password: givenPassword,
         };
         api.post("/api/login", formData)
-            .then(response => {
+            .then((response) => {
                 setLoggedIn(true);
-                navigate('/dashboard');
+                navigate("/dashboard");
             })
-            .catch(err => {
-                alert("Error: " + err.response.data['error']);
+            .catch((err) => {
+                alert("Error: " + err.response.data["error"]);
             });
     };
 
+    // check if the user is already logged in
+    useEffect(() => {
+        api.get("/api/user")
+            .then(() => {
+                navigate("/dashboard");
+            })
+            .catch(() => {});
+    }, [api, navigate]);
+
     return (
         <div className="bg-zinc-800 p-4 rounded-lg shadow-md w-fit text-left">
-            <form onSubmit={handleLogin} className='flex flex-col gap-4'>
+            <form onSubmit={handleLogin} className="flex flex-col gap-4">
                 <div>
-                    <label className='text-xs uppercase text-neutral-200' htmlFor="username">Email:</label>
+                    <label
+                        className="text-xs uppercase text-neutral-200"
+                        htmlFor="username"
+                    >
+                        Email:
+                    </label>
                     <input
                         type="text"
                         id="email"
@@ -37,7 +51,12 @@ function LoginMenu({ setLoggedIn, api }) {
                     />
                 </div>
                 <div>
-                    <label className='text-xs uppercase text-neutral-200' htmlFor="password">Password:</label>
+                    <label
+                        className="text-xs uppercase text-neutral-200"
+                        htmlFor="password"
+                    >
+                        Password:
+                    </label>
                     <input
                         type="password"
                         id="password"
@@ -54,7 +73,10 @@ function LoginMenu({ setLoggedIn, api }) {
                 </button>
             </form>
             <p className="mt-4">
-                Don't have an account? <a href="/signup" className="text-blue-500 hover:underline">Sign up instead.</a>
+                Don't have an account?{" "}
+                <a href="/signup" className="text-blue-500 hover:underline">
+                    Sign up instead.
+                </a>
             </p>
         </div>
     );
