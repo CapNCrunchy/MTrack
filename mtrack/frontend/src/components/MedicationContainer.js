@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { DotsThree } from "@phosphor-icons/react";
 
-const MedicationContainer = ({ medication_ID }) => {
+const MedicationContainer = ({ name, time, dosage }) => {
     // change bg color based on taken status
     const getBackgroundColor = () => {
         if (takenToday) {
@@ -34,7 +34,6 @@ const MedicationContainer = ({ medication_ID }) => {
 
     // hamburger menu for more options
     const [showMenu, setShowMenu] = useState(false);
-
     const [takenToday, setTakenToday] = useState(false);
     const [skipToday, setSkipToday] = useState(false);
 
@@ -42,14 +41,9 @@ const MedicationContainer = ({ medication_ID }) => {
         <div
             className={`relative flex flex-col justify-between p-4 rounded-lg shadow-md w-fit text-left justify-self-center ${getBackgroundColor()}`}
         >
-            <div className="flex flex-row justify-between gap-2">
-                <p className="text-sm font-light">09:00 AM</p>
-                <p className="text-sm font-light">2 pills</p>
-            </div>
+            <p className="text-sm font-light">09:00 AM</p>
 
-            <p className="text-xl leading-tight font-medium">
-                Medication Title
-            </p>
+            <p className="text-xl leading-tight font-medium">{name}</p>
 
             <hr className="my-2 border-t border-gray-300 w-full" />
             <div className="flex flex-row justify-between">

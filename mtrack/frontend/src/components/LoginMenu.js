@@ -7,20 +7,19 @@ function LoginMenu({ setLoggedIn, api }) {
 
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         const formData = {
             email: givenEmail,
             password: givenPassword,
         };
-        api.post("/api/login", formData)
-            .then((response) => {
-                setLoggedIn(true);
-                navigate("/dashboard");
-            })
-            .catch((err) => {
-                alert("Error: " + err.response.data["error"]);
-            });
+        try {
+            const response = await api.post("/api/login", formData);
+            setLoggedIn(true);
+            navigate("/dashboard");
+        } catch (err) {
+            alert("Error: " + err.response.data["error"]);
+        }
     };
 
     // check if the user is already logged in

@@ -7,20 +7,26 @@ function AddMedication({ api, setAddMedicationVisible }) {
     const [medicationForm, setMedicationForm] = useState("");
     const [medicationStrength, setMedicationStrength] = useState("");
     const [selectedDays, setSelectedDays] = useState([]);
+    const [selectedTimes, setSelectedTimes] = useState([""]);
 
     const navigate = useNavigate();
 
     const handleAddMedication = (e) => {
         e.preventDefault();
-        api.post("/api/medication", {
+
+        const formData = {
             name: medicationName,
             form: medicationForm,
             strength: medicationStrength,
-        })
-            .then(function (res) {
+            days: selectedDays,
+            times: selectedTimes,
+        };
+        api.post("/api/medications", formData)
+            .then(() => {
+                setAddMedicationVisible(false);
                 navigate("/dashboard");
             })
-            .catch(function (err) {
+            .catch((err) => {
                 alert("Error: " + err.response.data["error"]);
             });
     };
@@ -33,18 +39,6 @@ function AddMedication({ api, setAddMedicationVisible }) {
                 : [...prevDays, day]
         );
     };
-
-    const daysOfWeek = [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-    ];
-
-    const [selectedTimes, setSelectedTimes] = useState([""]);
 
     const addTime = () => {
         setSelectedTimes((prevTimes) => [...prevTimes, ""]);
@@ -106,10 +100,12 @@ function AddMedication({ api, setAddMedicationVisible }) {
                             className="mt-1 bg-zinc-800 block w-full px-3 py-2 text-white border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm placeholder-gray-400"
                         >
                             <option selected>Select a form</option>
-                            <option value="tablet">Pill</option>
+                            <option value="tablet">Tablet</option>
+                            <option value="capsule">Capsule</option>
                             <option value="liquid">Liquid</option>
                             <option value="injection">Injection</option>
-                            <option value="inhaler">Other</option>
+                            <option value="inhaler">Inhaler</option>
+                            <option value="other">Other</option>
                         </select>
                     </div>
                     <div>
@@ -135,14 +131,22 @@ function AddMedication({ api, setAddMedicationVisible }) {
                             Days to take medication:
                         </label>
                         <div className="mt-1 flex flex-wrap gap-2">
-                            {daysOfWeek.map((day) => (
+                            {[
+                                "Monday",
+                                "Tuesday",
+                                "Wednesday",
+                                "Thursday",
+                                "Friday",
+                                "Saturday",
+                                "Sunday",
+                            ].map((day, index) => (
                                 <button
-                                    key={day}
+                                    key={index}
                                     type="button"
-                                    onClick={() => toggleDay(day)}
-                                    className={`px-3 py-1 rounded-md ${
-                                        selectedDays.includes(day)
-                                            ? "bg-green-700 text-white"
+                                    onClick={() => toggleDay(index)}
+                                    className={`px-3 py-1 rounded-md text-sm ${
+                                        selectedDays.includes(index)
+                                            ? "bg-green-600 text-white"
                                             : "bg-gray-300 text-black"
                                     }`}
                                 >
