@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { CaretLeft } from "@phosphor-icons/react";
@@ -93,7 +93,44 @@ var events = [
     },
 ];
 
-function CalendarView() {
+
+
+function CalendarView({api, loggedIn}) {
+    const [medEvents, setMedEvents] = useState([]);
+    useEffect(() => {
+        const fetchMedications = async () => {
+            try {
+                const response = await api.get("/api/medications"); // Adjust the endpoint if needed
+                const medications = response.data;
+
+                // Transform medication data into calendar events
+                const events = medications.map((med) => {
+                    const start = new Date(moment(med.date).set({
+                        hour: "09",
+                        minute: "00",
+                    }));
+                    const end = new Date(moment(med.date).set({
+                        hour: "09",
+                        minute: "30",
+                    }));
+
+                    return {
+                        start,
+                        end,
+                        title: `${med.name} ${med.strength}`, // Adjust based on API fields
+                    };
+                });
+
+                setMedEvents(events); // Update state with transformed events
+            } catch (error) {
+                console.error("Error fetching medications:", error);
+            }
+        };
+
+        fetchMedications();
+    }, [api]);
+
+
     return (
         <div>
             <Link
@@ -105,7 +142,7 @@ function CalendarView() {
             </Link>
             <Calendar
                 localizer={localizer}
-                events={events}
+                events={medEvents}
                 startAccessor="start"
                 endAccessor="end"
                 style={{ height: 500 }}

@@ -15,6 +15,7 @@ class Dashboard extends Component {
             currentDate: new Date(),
             userMedications: [],
             todayUserMedications: [],
+            userRecords: [],
         };
     }
 
@@ -26,6 +27,7 @@ class Dashboard extends Component {
         });
         // get user medications
         this.getMedications();
+        this.getRecords();
         // get user medications for today
         this.getTodayMedications();
     }
@@ -37,6 +39,16 @@ class Dashboard extends Component {
             this.setState({ userMedications: response.data });
         } catch (error) {
             console.error("Error fetching medications:", error);
+        }
+    }
+
+    async getRecords() {
+        const { api } = this.props;
+        try {
+            const response = await api.get("/api/record");
+            this.setState({ userRecords: response.data });
+        } catch (error) {
+            console.error("Error fetching records:", error);
         }
     }
 
@@ -118,25 +130,17 @@ class Dashboard extends Component {
                     Your records:
                 </h2>
                 <div className="flex flex-wrap gap-4">
+                    {this.state.userRecords.map((record) => (
+                        <RecordContainer
+                            title={record.title}
+                            date={record.date}
+                            type="default"
+                        />
+                    ))}
                     <RecordContainer
-                        title="Covid-19 Vaccine"
-                        date="09-23-2021"
-                        type="Vaccine"
-                    />
-                    <RecordContainer
-                        title="Flu Vaccine"
-                        date="05-15-2023"
-                        type="Vaccine"
-                    />
-                    <RecordContainer
-                        title="Record 3"
-                        date="2021-09-03"
-                        type="Type 3"
-                    />
-                    <RecordContainer
-                        title="Record 4"
-                        date="2021-09-04"
-                        type="Type 4"
+                        title="COVID TEST"
+                        date="05-12-2000"
+                        type="test type"
                     />
                 </div>
 

@@ -28,6 +28,20 @@ class Medication(models.Model):
         ordering = ['name']
 
 
+class Record(models.Model):
+
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='record')
+    title = models.CharField(max_length=200)
+    #type = models.CharField(max_length=200)
+    date = models.DateField()
+
+    def __str__(self):
+        return f"{self.title} {self.date}"
+
+    class Meta:
+        ordering = ['date']
+
 class Schedule(models.Model):
     medication = models.ForeignKey(
         Medication, on_delete=models.CASCADE, related_name='schedules')

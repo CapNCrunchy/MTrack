@@ -1,6 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { X } from "@phosphor-icons/react";
+
+function getCSRFToken() {
+    const name = "csrftoken";
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 
 function AddMedication({ api, setAddMedicationVisible }) {
     const [medicationName, setMedicationName] = useState("");
@@ -21,14 +40,28 @@ function AddMedication({ api, setAddMedicationVisible }) {
             days: selectedDays,
             times: selectedTimes,
         };
-        api.post("/api/medications", formData)
-            .then(() => {
-                setAddMedicationVisible(false);
-                navigate("/dashboard");
-            })
-            .catch((err) => {
-                alert("Error: " + err.response.data["error"]);
+        //api.post("/api/medications", formData)
+        //    .then(() => {
+        //        setAddMedicationVisible(false);
+        //        navigate("/dashboard");
+        //    })
+        //    .catch((err) => {
+         //       alert("Error: " + err.response.data["error"]);
+         //   });
+        
+        const csrfToken = getCSRFToken();
+        try {
+            api.post("/api/medications", formData, {
+                headers: {
+                    "X-CSRFToken": csrfToken, // Include token here
+                },
             });
+            setAddMedicationVisible(false);
+            navigate("/dashboard");
+        } catch (err) {
+            console.error(err);
+            alert("Error: " + err.response?.data?.error || "An error occurred");
+        }
     };
 
     // function to toggle the selected days

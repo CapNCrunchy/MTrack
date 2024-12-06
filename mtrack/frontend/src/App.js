@@ -38,6 +38,10 @@ function App() {
     const [loggedIn, setLoggedIn] = useState();
 
     useEffect(() => {
+        api.get("/api/csrf/")
+            .then(() => console.log("CSRF token set successfully"))
+            .catch(() => console.error("Failed to fetch CSRF token"));
+
         api.get("/api/user")
             .then(function (res) {
                 setLoggedIn(true);
@@ -87,7 +91,12 @@ function App() {
                                     <Dashboard loggedIn={loggedIn} api={api} />
                                 }
                             />
-                            <Route path="calendar" element={<Calendar />} />
+                            <Route 
+                                path="calendar" 
+                                element={
+                                    <Calendar loggedIn={loggedIn} api={api}/>
+                                } 
+                            />
                         </Route>
                     </Routes>
                 </div>

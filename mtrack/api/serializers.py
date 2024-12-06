@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
-from .models import Medication, Schedule, ScheduleDay, ScheduleTime
+from .models import Medication, Record, Schedule, ScheduleDay, ScheduleTime
 from datetime import datetime, date
 
 UserModel = get_user_model()
@@ -123,3 +123,20 @@ class MedicationSerializer(serializers.ModelSerializer):
             representation['active'] = schedule.active
 
         return representation
+
+class RecordSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+
+        validated_data['user'] = self.context['request'].user
+
+        record = Record.objects.create(**validated_data)
+
+        return record
+
+        
+    class Meta:
+        model = Record
+        fields = ['id', 'title', 'date']
+        read_only_fields = ['user']
+

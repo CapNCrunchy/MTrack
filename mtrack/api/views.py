@@ -1,12 +1,14 @@
 from django.contrib.auth import get_user_model, login, logout
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import JsonResponse
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import UserSerializer, UserLoginSerializer, UserSignUpSerializer, ScheduleSerializer, MedicationSerializer
+from .serializers import UserSerializer, UserLoginSerializer, UserSignUpSerializer, ScheduleSerializer, MedicationSerializer, RecordSerializer
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from .models import Medication
+from .models import Medication, Record
 from .serializers import MedicationSerializer, ScheduleSerializer
 
 
@@ -189,3 +191,30 @@ class MedicationViewSet(viewsets.ModelViewSet):
             {'error': 'No schedule found'},
             status=status.HTTP_404_NOT_FOUND
         )
+
+class RecordViewSet(viewsets.ModelViewSet):
+    serializer_class = RecordSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+
+    def get_queryset(self):
+        """
+        Return records belonging to the current user,
+        ordered by name
+        """
+        return Record.objects.filter(
+            user=self.request.user
+        ).order_by('date')
+
+    def perform_create(self, serializer):
+        """
+        Create a new medication, automatically assigning the current user
+        """
+        serializer.save()
+
+
+
+
+@ensure_csrf_cookie
+def get_csrf_token(request):
+    return JsonResponse({"success": "CSRF cookie set"})
