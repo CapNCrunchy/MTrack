@@ -41,12 +41,15 @@ const MedicationContainer = ({ name, time, dosage }) => {
         <div
             className={`relative flex flex-col justify-between p-4 rounded-lg shadow-md w-fit text-left justify-self-center ${getBackgroundColor()}`}
         >
-            <p className="text-sm font-light">09:00 AM</p>
+            <div className="flex flex-row justify-between">
+                <p className="text-sm font-semibold">{time}</p>
+                <p className="text-sm font-light">{dosage}</p>
+            </div>
 
             <p className="text-xl leading-tight font-medium">{name}</p>
 
             <hr className="my-2 border-t border-gray-300 w-full" />
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row justify-between gap-2">
                 {getTakenStatus()}
                 <button
                     className="hover:text-neutral-300 transition-all"

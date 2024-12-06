@@ -9,5 +9,5 @@ urlpatterns = [
     path("medications", MedicationViewSet.as_view(
         {'get': 'list', 'post': 'create'}), name="medications"),
     path("medications/today", MedicationViewSet.as_view(
-        {'get': 'list_today'}), name="medications_today"),
+        {'get': 'today'}), name="medications_today"),
 ]

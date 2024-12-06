@@ -161,7 +161,15 @@ class MedicationViewSet(viewsets.ModelViewSet):
         ).distinct()
 
         serializer = self.get_serializer(medications, many=True)
-        return Response(serializer.data)
+        result = []
+        for medication in medications:
+            for time in medication.schedules.first().times.all():
+                result.append({
+                    'medication': self.get_serializer(medication).data,
+                    'time': time.time.strftime("%H:%M")
+                })
+
+        return Response(result, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         """

@@ -26,6 +26,8 @@ class Dashboard extends Component {
         });
         // get user medications
         this.getMedications();
+        // get user medications for today
+        this.getTodayMedications();
     }
 
     async getMedications() {
@@ -43,6 +45,7 @@ class Dashboard extends Component {
         try {
             const response = await api.get("/api/medications/today");
             this.setState({ todayUserMedications: response.data });
+            console.log(response.data);
         } catch (error) {
             console.error("Error fetching today medications:", error);
         }
@@ -102,12 +105,12 @@ class Dashboard extends Component {
                     Your medications today:
                 </h2>
                 <div className="flex flex-wrap gap-4">
-                    {this.state.userMedications.map((medication) => (
+                    {this.state.todayUserMedications.map((medication) => (
                         <MedicationContainer
-                            key={medication.id}
-                            name={medication.name}
+                            key={medication.medication.id}
+                            name={medication.medication.name}
                             time={medication.time}
-                            dosage={medication.dosage}
+                            dosage={medication.medication.strength}
                         />
                     ))}
                 </div>
