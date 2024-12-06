@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { X } from "@phosphor-icons/react";
 
@@ -20,7 +20,6 @@ function getCSRFToken() {
     return cookieValue;
 }
 
-
 function AddMedication({ api, setAddMedicationVisible }) {
     const [medicationName, setMedicationName] = useState("");
     const [medicationForm, setMedicationForm] = useState("");
@@ -40,15 +39,7 @@ function AddMedication({ api, setAddMedicationVisible }) {
             days: selectedDays,
             times: selectedTimes,
         };
-        //api.post("/api/medications", formData)
-        //    .then(() => {
-        //        setAddMedicationVisible(false);
-        //        navigate("/dashboard");
-        //    })
-        //    .catch((err) => {
-         //       alert("Error: " + err.response.data["error"]);
-         //   });
-        
+
         const csrfToken = getCSRFToken();
         try {
             api.post("/api/medications", formData, {

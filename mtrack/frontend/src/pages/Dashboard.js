@@ -53,11 +53,20 @@ class Dashboard extends Component {
     }
 
     async getTodayMedications() {
-        const { api } = this.props;
         try {
+            const { api } = this.props;
             const response = await api.get("/api/medications/today");
-            this.setState({ todayUserMedications: response.data });
-            console.log(response.data);
+
+            const sortedMedications = response.data.sort((a, b) => {
+                return (
+                    new Date(`1970-01-01T${a.time}:00Z`) -
+                    new Date(`1970-01-01T${b.time}:00Z`)
+                );
+            });
+
+            this.setState({ todayUserMedications: sortedMedications });
+
+            console.log(sortedMedications);
         } catch (error) {
             console.error("Error fetching today medications:", error);
         }
@@ -117,6 +126,9 @@ class Dashboard extends Component {
                     Your medications today:
                 </h2>
                 <div className="flex flex-wrap gap-4">
+                    {this.state.todayUserMedications.length === 0 && (
+                        <p className="text-base">No medications for today.</p>
+                    )}
                     {this.state.todayUserMedications.map((medication) => (
                         <MedicationContainer
                             key={medication.medication.id}
@@ -130,6 +142,9 @@ class Dashboard extends Component {
                     Your records:
                 </h2>
                 <div className="flex flex-wrap gap-4">
+                    {this.state.userRecords.length === 0 && (
+                        <p className="text-base">No records yet.</p>
+                    )}
                     {this.state.userRecords.map((record) => (
                         <RecordContainer
                             title={record.title}
@@ -137,11 +152,6 @@ class Dashboard extends Component {
                             type="default"
                         />
                     ))}
-                    <RecordContainer
-                        title="COVID TEST"
-                        date="05-12-2000"
-                        type="test type"
-                    />
                 </div>
 
                 {addMedicationVisible && (

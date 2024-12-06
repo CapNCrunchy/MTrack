@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model, login, logout
+from datetime import datetime
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 from rest_framework.authentication import SessionAuthentication
@@ -192,6 +193,7 @@ class MedicationViewSet(viewsets.ModelViewSet):
             status=status.HTTP_404_NOT_FOUND
         )
 
+
 class RecordViewSet(viewsets.ModelViewSet):
     serializer_class = RecordSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -211,8 +213,6 @@ class RecordViewSet(viewsets.ModelViewSet):
         Create a new medication, automatically assigning the current user
         """
         serializer.save()
-
-
 
 
 @ensure_csrf_cookie

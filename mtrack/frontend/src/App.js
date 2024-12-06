@@ -91,11 +91,11 @@ function App() {
                                     <Dashboard loggedIn={loggedIn} api={api} />
                                 }
                             />
-                            <Route 
-                                path="calendar" 
+                            <Route
+                                path="calendar"
                                 element={
-                                    <Calendar loggedIn={loggedIn} api={api}/>
-                                } 
+                                    <Calendar loggedIn={loggedIn} api={api} />
+                                }
                             />
                         </Route>
                     </Routes>
