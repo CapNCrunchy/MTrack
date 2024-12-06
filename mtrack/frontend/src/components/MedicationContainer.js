@@ -44,7 +44,8 @@ const MedicationContainer = ({ name, time, dosage }) => {
             <p className="text-sm font-light">09:00 AM</p>
 
             <p className="text-xl leading-tight font-medium">{name}</p>
-
+            <p className="text-sm font-light">{dosage}</p>
+            
             <hr className="my-2 border-t border-gray-300 w-full" />
             <div className="flex flex-row justify-between">
                 {getTakenStatus()}

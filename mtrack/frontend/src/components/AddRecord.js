@@ -2,6 +2,24 @@ import { React, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { X } from "@phosphor-icons/react";
 
+function getCSRFToken() {
+    const name = "csrftoken";
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 function AddRecord({ api, setAddRecordVisible }) {
     const [recordTitle, setRecordTitle] = useState("");
     const [recordDate, setRecordDate] = useState("");
@@ -10,11 +28,19 @@ function AddRecord({ api, setAddRecordVisible }) {
 
     const handleAddRecord = (e) => {
         e.preventDefault();
+        const csrfToken = getCSRFToken();
+
         api.post("/api/record", {
             title: recordTitle,
             date: recordDate,
+
+        },{
+            headers: {
+                "X-CSRFToken": csrfToken, 
+            },
         })
             .then(function (res) {
+                setAddRecordVisible(false);
                 navigate("/dashboard");
             })
             .catch(function (err) {
