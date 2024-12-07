@@ -1,40 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function SignupMenu({ setLoggedIn, api }) {
-    const [givenEmail, setGivenEmail] = useState('');
-    const [givenName, setGivenName] = useState('');
-    const [givenPassword, setGivenPassword] = useState('');
+    const [givenEmail, setGivenEmail] = useState("");
+    const [givenName, setGivenName] = useState("");
+    const [givenPassword, setGivenPassword] = useState("");
 
     const navigate = useNavigate();
 
     const handleSignup = (e) => {
         e.preventDefault();
-        api.post(
-            "/api/signup",
-            {
-                email: givenEmail,
-                name: givenName,
-                password: givenPassword
-            }
-        ).then(function (res) {
-            api.post("/api/login", {
-                email: givenEmail,
-                password: givenPassword
-            }).then(function (res) {
-                setLoggedIn(true);
-                navigate('/dashboard');
+        api.post("/api/signup", {
+            email: givenEmail,
+            name: givenName,
+            password: givenPassword,
+        })
+            .then(function (res) {
+                api.post("/api/login", {
+                    email: givenEmail,
+                    password: givenPassword,
+                }).then(function (res) {
+                    setLoggedIn(true);
+                    navigate("/dashboard");
+                });
             })
-        }).catch(function (err) {
-            alert("Error: " + err.response.data['error']);
-        });
+            .catch(function (err) {
+                alert("Error: " + err.response.data["error"]);
+            });
     };
+
+    // check if the user is already logged in
+    useEffect(() => {
+        api.get("/api/user")
+            .then(() => {
+                navigate("/dashboard");
+            })
+            .catch(() => {});
+    }, [api, navigate]);
 
     return (
         <div className="bg-zinc-800 p-4 rounded-lg shadow-md w-fit text-left">
-            <form onSubmit={handleSignup} className='flex flex-col gap-4'>
+            <form onSubmit={handleSignup} className="flex flex-col gap-4">
                 <div>
-                    <label className='text-xs uppercase text-neutral-200' htmlFor="name">Name:</label>
+                    <label
+                        className="text-xs uppercase text-neutral-200"
+                        htmlFor="name"
+                    >
+                        Name:
+                    </label>
                     <input
                         type="text"
                         id="name"
@@ -44,7 +57,12 @@ function SignupMenu({ setLoggedIn, api }) {
                     />
                 </div>
                 <div>
-                    <label className='text-xs uppercase text-neutral-200' htmlFor="email">Email:</label>
+                    <label
+                        className="text-xs uppercase text-neutral-200"
+                        htmlFor="email"
+                    >
+                        Email:
+                    </label>
                     <input
                         type="email"
                         id="email"
@@ -54,7 +72,12 @@ function SignupMenu({ setLoggedIn, api }) {
                     />
                 </div>
                 <div>
-                    <label className='text-xs uppercase text-neutral-200' htmlFor="password">Password:</label>
+                    <label
+                        className="text-xs uppercase text-neutral-200"
+                        htmlFor="password"
+                    >
+                        Password:
+                    </label>
                     <input
                         type="password"
                         id="password"
@@ -71,9 +94,12 @@ function SignupMenu({ setLoggedIn, api }) {
                 </button>
             </form>
             <p className="mt-4">
-                Already have an account? <a href="/login" className="text-blue-500 hover:underline">Log in instead.</a>
+                Already have an account?{" "}
+                <a href="/login" className="text-blue-500 hover:underline">
+                    Log in instead.
+                </a>
             </p>
-        </div >
+        </div>
     );
 }
 
